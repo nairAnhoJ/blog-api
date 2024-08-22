@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::prefix('v1')->middleware('auth:sanctum')->group(function(){
     Route::get('users', [UserController::class, 'index']);
+    Route::post('users', [UserController::class, 'store']);
 });
 
 Route::prefix('auth')->group(function(){
