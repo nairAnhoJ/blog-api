@@ -9,6 +9,7 @@ use App\Http\Resources\V1\UserCollection;
 use App\Http\Resources\V1\UserResource;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
@@ -36,5 +37,20 @@ class UserController extends Controller
 
     public function delete($id){
         User::findOrFail($id)->delete();
+    }
+
+    public function reset($id){
+        $characters = '3479abcdefghijkmnpqrstuvwxyzACDEFHJKLMNPQRTUVWXY!@#$%^&*-_+=';
+        $charactersLength = strlen($characters);
+        $newPassword = '';
+        for ($i = 0; $i < 8; $i++) {
+            $newPassword .= $characters[rand(0, $charactersLength - 1)];
+        }
+
+        $user = User::findOrFail($id);
+        $user->password = Hash::make($newPassword);
+        $user->save();
+
+        return $newPassword;
     }
 }
